@@ -3,7 +3,8 @@
 let input       = document.querySelector('#prix'),
     error       = document.querySelector('small'),
     formulaire  = document.querySelector('#formulaire'),
-    coups       = 0;
+    coups       = 0,
+    nombreUtilisateur;    
 
 // Etape 2 - Cacher l'erreur
 
@@ -16,7 +17,7 @@ let nombreAleatoire = Math.floor(Math.random() * 1001);
 // Etape 4 - Vérifier que l'utilisateur donne bien un nombre
 
 input.addEventListener('keyup', () => {
-    if (isNaN(input.value) || input.value == "") {
+    if (isNaN(input.value)) {
         error.style.display = 'inline';
     } else {
         error.style.display = 'none';
@@ -31,8 +32,29 @@ formulaire.addEventListener('submit', (e) => {
         input.style.borderColor = "red";
     } else {
         coups++;
+        nombreUtilisateur       = input.value;
+        input.value             = "";
+        verifier(nombreUtilisateur);
         input.style.borderColor = "silver";
     }
-})
+});
 
 // Etape 6 - Créer la fonction vérifier
+
+function verifier(nombre) {
+    let instruction = document.createElement('div');
+    if(nombre < nombreAleatoire) {
+        instruction.textContent = "#" + coups + " (" + nombre + ") C'est plus !";
+        instruction.className = 'instruction plus';
+    }
+    else if(nombre > nombreAleatoire){
+        instruction.textContent = "#" + coups + " (" + nombre + ") C'est moins !";
+        instruction.className = 'instruction moins';
+    } else {
+        instruction.textContent = "#" + coups + " (" + nombre + ") Félicitations, vous avez trouvé le juste prix !";
+        instruction.className = 'instruction fini';
+        input.disabled = true;
+    }
+    document.querySelector('#instructions').prepend(instruction);
+    
+}
